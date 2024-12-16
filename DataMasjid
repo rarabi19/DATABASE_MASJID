@@ -1,0 +1,902 @@
+CREATE TABLE data_masjid (
+    id_msjd    VARCHAR2(12) NOT NULL,
+    nama_msjd  VARCHAR2(30) NOT NULL,
+    nama_garim VARCHAR2(30) NOT NULL,
+    CONSTRAINT data_masjid_pk PRIMARY KEY (id_msjd)
+);
+
+CREATE TABLE ktgr_klr (
+    id_ktgrklr          VARCHAR2(12) NOT NULL,
+    nama_ktgrklr        VARCHAR2(30) NOT NULL,
+    data_masjid_id_msjd VARCHAR2(12) NOT NULL,
+    CONSTRAINT ktgr_klr_pk PRIMARY KEY (id_ktgrklr, data_masjid_id_msjd),
+    CONSTRAINT ktgr_klr_fk FOREIGN KEY (data_masjid_id_msjd)
+        REFERENCES data_masjid(id_msjd)
+);
+
+CREATE TABLE ktgr_msk (
+    id_ktgrmsk          VARCHAR2(12) NOT NULL,
+    nama_ktgrm          VARCHAR2(30) NOT NULL,
+    data_masjid_id_msjd VARCHAR2(12) NOT NULL,
+    CONSTRAINT ktgr_msk_pk PRIMARY KEY (id_ktgrmsk, data_masjid_id_msjd),
+    CONSTRAINT ktgr_msk_fk FOREIGN KEY (data_masjid_id_msjd)
+        REFERENCES data_masjid(id_msjd)
+);
+
+CREATE TABLE tanggal (
+    id_tgl VARCHAR2(12) NOT NULL,
+    tgl    DATE NOT NULL,
+    CONSTRAINT tanggal_pk PRIMARY KEY (id_tgl)
+);
+
+CREATE TABLE peklr_msjd (
+    id_klr                       VARCHAR2(12) NOT NULL,
+    tglklr                       DATE NOT NULL,
+    jlm                          NUMBER(12, 1) NOT NULL,
+    tanggal_id_tgl               VARCHAR2(12) NOT NULL,
+    ktgr_klr_id_ktgrklr          VARCHAR2(12) NOT NULL,
+    ktgr_klr_data_masjid_id_msjd VARCHAR2(12) NOT NULL,
+    CONSTRAINT peklr_msjd_pk PRIMARY KEY (id_klr, ktgr_klr_id_ktgrklr, ktgr_klr_data_masjid_id_msjd),
+    CONSTRAINT peklr_msjd_ktgr_klr_fk FOREIGN KEY (ktgr_klr_id_ktgrklr, ktgr_klr_data_masjid_id_msjd)
+        REFERENCES ktgr_klr(id_ktgrklr, data_masjid_id_msjd),
+    CONSTRAINT peklr_msjd_tanggal_fk FOREIGN KEY (tanggal_id_tgl)
+        REFERENCES tanggal(id_tgl)
+);
+
+CREATE TABLE pemsk_msjd (
+    id_msk                       VARCHAR2(12) NOT NULL,
+    tglmsk                       DATE NOT NULL,
+    jlm                          NUMBER(12, 1) NOT NULL,
+    ktgr_msk_id_ktgrmsk          VARCHAR2(12) NOT NULL,
+    tanggal_id_tgl               VARCHAR2(12) NOT NULL,
+    ktgr_msk_data_masjid_id_msjd VARCHAR2(12) NOT NULL,
+    CONSTRAINT pemsk_msjd_pk PRIMARY KEY (id_msk, ktgr_msk_id_ktgrmsk, ktgr_msk_data_masjid_id_msjd),
+    CONSTRAINT pemsk_msjd_ktgr_msk_fk FOREIGN KEY (ktgr_msk_id_ktgrmsk, ktgr_msk_data_masjid_id_msjd)
+        REFERENCES ktgr_msk(id_ktgrmsk, data_masjid_id_msjd),
+    CONSTRAINT pemsk_msjd_tanggal_fk FOREIGN KEY (tanggal_id_tgl)
+        REFERENCES tanggal(id_tgl)
+);
+
+
+-------DATA MASJID
+
+INSERT INTO data_masjid (id_msjd, nama_msjd,nama_garim) VALUES ('MDRS', 'Masjid Darussalam', 'Rizal Ramadhan');
+INSERT INTO data_masjid (id_msjd, nama_msjd,nama_garim) VALUES ('MAF', 'Masjid Al-Fajar', 'Ahmad Efendi');
+
+--------KATEGORI PEMASUKAN MASJID 1 [ MDRS ]
+
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('IM','Infaq Masjid','MDRS');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('IJ','Infaq Jumat','MDRS');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('IAY','Infaq Anak Yatim','MDRS');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('IMDTA','Infaq MDTA','MDRS');
+
+---------KATEGORI PENGELUARAN MASJID 1 [ MDRS ]
+
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('LM','Listrik Masjid','MDRS');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('GKJ','Gaji Khatib Jumat','MDRS');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('GG','Gaji Garim','MDRS');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('GGM','Gaji Guru Mengaji','MDRS');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('KM', 'Keperluan Masjid','MDRS');
+
+------ KATEGORI PEMASUKAN MASJID 2 [ MAF ]
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('IM','Infaq Masjid','MAF');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('IJ','Infaq Jumat','MAF');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('IAY','Infaq Anak Yatim','MAF');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('LTS','Listrik Toko Sayur','MAF');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('LS','Listrik Swalayan','MAF');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('STM','Sedekah Tokoh Masyarakat','MAF');
+INSERT INTO ktgr_msk (id_ktgrmsk, nama_ktgrm, data_masjid_id_msjd) VALUES ('LL','Lelang','MAF');
+
+------KATEGORI PENGELUARAN MASJID 2 [ MAF ]
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('LM','Listrik Masjid','MAF');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('GKJ','Gaji Khatib Jumat','MAF');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('GCS','Gaji Cleaning Service','MAF');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('GG','Gaji Garim','MAF');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('GGM','Gaji Guru Mengaji','MAF');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('MR','Musholla AR-Rahman','MAF');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('MI','Musholla AL-Ikhlas','MAF');
+INSERT INTO ktgr_klr (id_ktgrklr, nama_ktgrklr, data_masjid_id_msjd) VALUES ('KM', 'Keperluan Masjid','MAF');
+
+-------TANGGAL TRANSAKSI MASJID
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL1', TO_DATE('02/01/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL2', TO_DATE('05/01/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL3', TO_DATE('25/01/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL4', TO_DATE('29/01/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL5', TO_DATE('12/02/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL6', TO_DATE('21/02/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL7', TO_DATE('22/02/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL8', TO_DATE('23/02/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL9', TO_DATE('25/02/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL10', TO_DATE('01/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL11', TO_DATE('02/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL12', TO_DATE('03/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL13', TO_DATE('05/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL14', TO_DATE('06/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL15', TO_DATE('07/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL16', TO_DATE('08/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL17', TO_DATE('09/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL18', TO_DATE('11/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL19', TO_DATE('18/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL20', TO_DATE('20/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL21', TO_DATE('21/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL22', TO_DATE('23/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL23', TO_DATE('25/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL24', TO_DATE('29/03/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL25', TO_DATE('01/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL26', TO_DATE('03/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL27', TO_DATE('05/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL28', TO_DATE('09/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL29', TO_DATE('10/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL30', TO_DATE('12/04/2024','DD-MM-YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL31', TO_DATE('17/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL32', TO_DATE('18/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL33', TO_DATE('19/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL34', TO_DATE('20/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL35', TO_DATE('25/04/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL36', TO_DATE('02/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL37', TO_DATE('03/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL38', TO_DATE('05/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL39', TO_DATE('06/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL40', TO_DATE('08/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL41', TO_DATE('09/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL42', TO_DATE('10/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL43', TO_DATE('11/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL44', TO_DATE('13/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL45', TO_DATE('17/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL46', TO_DATE('18/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL47', TO_DATE('19/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL48', TO_DATE('20/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL49', TO_DATE('21/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL50', TO_DATE('23/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL51', TO_DATE('24/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL52', TO_DATE('25/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL53', TO_DATE('26/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL54', TO_DATE('31/05/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL55', TO_DATE('04/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL56', TO_DATE('05/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL57', TO_DATE('07/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL58', TO_DATE('09/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL59', TO_DATE('11/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL60', TO_DATE('17/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL61', TO_DATE('20/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL62', TO_DATE('23/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL63', TO_DATE('25/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL64', TO_DATE('28/06/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL65', TO_DATE('04/07/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL66', TO_DATE('05/07/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL67', TO_DATE('11/07/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL68', TO_DATE('16/08/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL69', TO_DATE('18/08/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL70', TO_DATE('19/08/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL71', TO_DATE('20/08/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL72', TO_DATE('22/08/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL73', TO_DATE('23/08/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL74', TO_DATE('30/08/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL75', TO_DATE('01/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL76', TO_DATE('03/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL77', TO_DATE('04/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL78', TO_DATE('06/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL79', TO_DATE('08/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL80', TO_DATE('09/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL81', TO_DATE('10/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL82', TO_DATE('12/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL83', TO_DATE('15/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL84', TO_DATE('16/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL85', TO_DATE('18/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL86', TO_DATE('19/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL87', TO_DATE('20/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL88', TO_DATE('22/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL89', TO_DATE('27/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL90', TO_DATE('29/09/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL91', TO_DATE('04/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL92', TO_DATE('05/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL93', TO_DATE('11/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL94', TO_DATE('15/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL95', TO_DATE('18/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL96', TO_DATE('19/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL97', TO_DATE('20/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL98', TO_DATE('25/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL99', TO_DATE('29/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL100', TO_DATE('31/10/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL101', TO_DATE('01/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL102', TO_DATE('04/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL103', TO_DATE('06/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL104', TO_DATE('08/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL105', TO_DATE('10/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL106', TO_DATE('15/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL107', TO_DATE('20/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL108', TO_DATE('22/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL109', TO_DATE('24/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL110', TO_DATE('27/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL111', TO_DATE('28/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL112', TO_DATE('29/11/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL113', TO_DATE('01/12/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL114', TO_DATE('02/12/2024','DD/MM/YYYY'));
+INSERT INTO tanggal (id_tgl, tgl) VALUES ('TGL115', TO_DATE('04/12/2024','DD/MM/YYYY'));
+
+
+------DATA PEMASUKAN MASJID 1 DAN 2
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES ('M1', 'MDRS', 'IJ', 'TGL2', TO_DATE('05/01/2024', 'DD/MM/YYYY'), 870000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES ('M2', 'MAF', 'LS',	'TGL6', TO_DATE('21/02/2024', 'DD/MM/YYYY'), 1.000.000.0)
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M3', 'MAF', 'IJ', 'TGL8', TO_DATE('23/02/2024', 'DD/MM/YYYY'), 876000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M4', 'MAF', 'LTS', 'TGL9', TO_DATE('25/02/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M5', 'MAF', 'IJ', 'TGL10', TO_DATE('01/03/2024', 'DD/MM/YYYY'), 972000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M6', 'MAF', 'IM', 'TGL15', TO_DATE('07/03/2024', 'DD/MM/YYYY'), 3850000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M7', 'MAF', 'IJ', 'TGL17', TO_DATE('09/03/2024', 'DD/MM/YYYY'), 782000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M8', 'MAF', 'IJ', 'TGL19', TO_DATE('18/03/2024', 'DD/MM/YYYY'), 735000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M9', 'MAF', 'IM', 'TGL19', TO_DATE('18/03/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M10', 'MAF', 'IM', 'TGL21', TO_DATE('21/03/2024', 'DD/MM/YYYY'), 1172000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M11', 'MAF', 'IJ', 'TGL24', TO_DATE('29/03/2024', 'DD/MM/YYYY'), 825000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M12', 'MAF', 'IJ', 'TGL30', TO_DATE('12/04/2024', 'DD/MM/YYYY'), 850000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M13', 'MAF', 'LS', 'TGL32', TO_DATE('18/04/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M14', 'MAF', 'IJ', 'TGL33', TO_DATE('19/04/2024', 'DD/MM/YYYY'), 784000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M15', 'MAF', 'LTS', 'TGL34', TO_DATE('20/04/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M16', 'MAF', 'IJ', 'TGL35', TO_DATE('25/04/2024', 'DD/MM/YYYY'), 461000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M17', 'MAF', 'IM', 'TGL39', TO_DATE('06/05/2024', 'DD/MM/YYYY'), 5200000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M18', 'MAF', 'IM', 'TGL39', TO_DATE('06/05/2024', 'DD/MM/YYYY'), 5050000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M19', 'MAF', 'IJ', 'TGL39', TO_DATE('06/05/2024', 'DD/MM/YYYY'), 835000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M20', 'MAF', 'IM', 'TGL40', TO_DATE('08/05/2024', 'DD/MM/YYYY'), 4000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M21', 'MAF', 'IM', 'TGL41', TO_DATE('09/05/2024', 'DD/MM/YYYY'), 3433000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M22', 'MAF', 'IJ', 'TGL43', TO_DATE('11/05/2024', 'DD/MM/YYYY'), 700000.0;)
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M23', 'MAF', 'IJ', 'TGL45', TO_DATE('17/05/2024', 'DD/MM/YYYY'), 530000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M24', 'MDRS', 'IJ', 'TGL46', TO_DATE('18/05/2024', 'DD/MM/YYYY'), 690000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M25', 'MDRS', 'IJ', 'TGL47', TO_DATE('19/05/2024', 'DD/MM/YYYY'), 477000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M26', 'MDRS', 'IJ', 'TGL48', TO_DATE('20/05/2024', 'DD/MM/YYYY'), 485000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M27', 'MAF', 'LS', 'TGL48', TO_DATE('20/05/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M28', 'MAF', 'LTS', 'TGL49', TO_DATE('21/05/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M29', 'MAF', 'STM', 'TGL53', TO_DATE('26/05/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M30', 'MAF', 'IJ', 'TGL53', TO_DATE('26/05/2024', 'DD/MM/YYYY'), 876000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M31', 'MAF', 'IJ', 'TGL54', TO_DATE('31/05/2024', 'DD/MM/YYYY'), 630000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M32', 'MAF', 'IM', 'TGL55', TO_DATE('05/06/2024', 'DD/MM/YYYY'), 3800000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M33', 'MAF', 'IJ', 'TGL57', TO_DATE('07/06/2024', 'DD/MM/YYYY'), 642000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M34', 'MAF', 'IM', 'TGL60', TO_DATE('17/06/2024', 'DD/MM/YYYY'), 4430000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M35', 'MAF', 'LS', 'TGL61', TO_DATE('20/06/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M36', 'MAF', 'LTS', 'TGL61', TO_DATE('20/06/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M37', 'MAF', 'IJ', 'TGL63', TO_DATE('25/06/2024', 'DD/MM/YYYY'), 800000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M38', 'MAF', 'IJ', 'TGL64', TO_DATE('28/06/2024', 'DD/MM/YYYY'), 480000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M39', 'MAF', 'IM', 'TGL64', TO_DATE('28/06/2024', 'DD/MM/YYYY'), 3600000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M40', 'MAF', 'IJ', 'TGL65', TO_DATE('04/07/2024', 'DD/MM/YYYY'), 815000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M41', 'MAF', 'IJ', 'TGL67', TO_DATE('11/07/2024', 'DD/MM/YYYY'), 670000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M42', 'MAF', 'IJ', 'TGL68', TO_DATE('16/08/2024', 'DD/MM/YYYY'), 441000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M43', 'MAF', 'LS', 'TGL71', TO_DATE('20/08/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M44', 'MAF', 'LTS', 'TGL71', TO_DATE('20/08/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M45', 'MAF', 'STM', 'TGL72', TO_DATE('22/08/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M46', 'MAF', 'IJ', 'TGL74', TO_DATE('30/08/2024', 'DD/MM/YYYY'), 660000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M47', 'MAF', 'STM', 'TGL74', TO_DATE('30/08/2024', 'DD/MM/YYYY'), 6000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M48', 'MAF', 'STM', 'TGL74', TO_DATE('30/08/2024', 'DD/MM/YYYY'), 4000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M49', 'MAF', 'STM', 'TGL74', TO_DATE('30/08/2024', 'DD/MM/YYYY'), 2000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M50', 'MAF', 'STM', 'TGL74', TO_DATE('30/08/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M51', 'MAF', 'IM', 'TGL76', TO_DATE('03/09/2024', 'DD/MM/YYYY'), 4400000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M52', 'MAF', 'IJ', 'TGL79', TO_DATE('08/09/2024', 'DD/MM/YYYY'), 765000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M53', 'MAF', 'STM', 'TGL81', TO_DATE('10/09/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M54', 'MAF', 'IJ', 'TGL81', TO_DATE('10/09/2024', 'DD/MM/YYYY'), 900000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M55', 'MAF', 'LL', 'TGL83', TO_DATE('15/09/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M56', 'MAF', 'STM', 'TGL84', TO_DATE('16/09/2024', 'DD/MM/YYYY'), 200000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M57', 'MAF', 'STM', 'TGL86', TO_DATE('19/09/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M58', 'MAF', 'IJ', 'TGL87', TO_DATE('20/09/2024', 'DD/MM/YYYY'), 750000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M59', 'MAF', 'LS', 'TGL88', TO_DATE('22/09/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M60', 'MAF', 'LTS', 'TGL88', TO_DATE('22/09/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M61', 'MAF', 'IJ', 'TGL89', TO_DATE('27/09/2024', 'DD/MM/YYYY'), 720000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M62', 'MAF', 'LL', 'TGL89', TO_DATE('27/09/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M63', 'MDRS', 'IAY', 'TGL91', TO_DATE('04/10/2024', 'DD/MM/YYYY'), 275000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M64', 'MAF', 'IJ', 'TGL91', TO_DATE('04/10/2024', 'DD/MM/YYYY'), 800000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M65', 'MAF', 'IM', 'TGL91', TO_DATE('04/10/2024', 'DD/MM/YYYY'), 3854000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M66', 'MDRS', 'IAY', 'TGL93', TO_DATE('11/10/2024', 'DD/MM/YYYY'), 93000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M67', 'MAF', 'IJ', 'TGL93', TO_DATE('11/10/2024', 'DD/MM/YYYY'), 480000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M68', 'MAF', 'STM', 'TGL94', TO_DATE('15/10/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M69', 'MDRS', 'IAY', 'TGL95', TO_DATE('18/10/2024', 'DD/MM/YYYY'), 231000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M70', 'MAF', 'IJ', 'TGL95', TO_DATE('18/10/2024', 'DD/MM/YYYY'), 937000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M71', 'MAF', 'LS', 'TGL95', TO_DATE('18/10/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M72', 'MAF', 'LTS', 'TGL95', TO_DATE('18/10/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M73', 'MDRS', 'IAY', 'TGL98', TO_DATE('25/10/2024', 'DD/MM/YYYY'), 124000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M74', 'MAF', 'IJ', 'TGL98', TO_DATE('25/10/2024', 'DD/MM/YYYY'), 670000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M75', 'MDRS', 'IAY', 'TGL101', TO_DATE('01/11/2024', 'DD/MM/YYYY'), 193000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M76', 'MAF', 'IJ', 'TGL101', TO_DATE('01/11/2024', 'DD/MM/YYYY'), 714000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M77', 'MAF', 'IM', 'TGL103', TO_DATE('06/11/2024', 'DD/MM/YYYY'), 3900000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M78', 'MDRS', 'IAY', 'TGL104', TO_DATE('08/11/2024', 'DD/MM/YYYY'), 160000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M79', 'MDRS', 'IMDTA', 'TGL104', TO_DATE('08/11/2024', 'DD/MM/YYYY'), 140000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M80', 'MAF', 'IJ', 'TGL104', TO_DATE('08/11/2024', 'DD/MM/YYYY'), 585000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M81', 'MAF', 'STM', 'TGL105', TO_DATE('10/11/2024', 'DD/MM/YYYY'), 300000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M82', 'MDRS', 'IAY', 'TGL106', TO_DATE('15/11/2024', 'DD/MM/YYYY'), 91000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M83', 'MDRS', 'IMDTA', 'TGL106', TO_DATE('15/11/2024', 'DD/MM/YYYY'), 27000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M84', 'MAF', 'IJ', 'TGL106', TO_DATE('15/11/2024', 'DD/MM/YYYY'), 590000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M85', 'MAF', 'LS', 'TGL107', TO_DATE('20/11/2024', 'DD/MM/YYYY'), 1000000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M86', 'MAF', 'LTS', 'TGL107', TO_DATE('20/11/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M87', 'MDRS', 'IAY', 'TGL108', TO_DATE('22/11/2024', 'DD/MM/YYYY'), 300000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M88', 'MAF', 'IJ', 'TGL108', TO_DATE('22/11/2024', 'DD/MM/YYYY'), 602000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M89', 'MDRS', 'IMDTA', 'TGL109', TO_DATE('24/11/2024', 'DD/MM/YYYY'), 197000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M90', 'MAF', 'IJ', 'TGL112', TO_DATE('29/11/2024', 'DD/MM/YYYY'), 807000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M91', 'MAF', 'STM', 'TGL113', TO_DATE('01/12/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M92', 'MAF', 'STM', 'TGL114', TO_DATE('02/12/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M93', 'MAF', 'STM', 'TGL114', TO_DATE('02/12/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO pemsk_msjd (id_msk, ktgr_msk_data_masjid_id_msjd, ktgr_msk_id_ktgrmsk, tanggal_id_tgl, tglmsk, jlm )
+VALUES  ('M94', 'MAF', 'IM', 'TGL115', TO_DATE('04/12/2024', 'DD/MM/YYYY'), 3675000.0);
+
+
+------DATA PENGELUARAN MASJID 1 DAN 2
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K1', 'MAF', 'GCS', 'TGL1', TO_DATE('02/01/2024', 'DD/MM/YYYY'), 300000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K1', 'MAF', 'GCS', 'TGL1', TO_DATE('02/01/2024', 'DD/MM/YYYY'), 400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K2', 'MAF', 'KM', 'TGL3', TO_DATE('25/01/2024', 'DD/MM/YYYY'), 300000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K3', 'MAF', 'GKJ', 'TGL4', TO_DATE('29/01/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K4', 'MAF', 'LM', 'TGL5', TO_DATE('12/02/2024', 'DD/MM/YYYY'), 1413000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K5', 'MAF', 'GKJ', 'TGL5', TO_DATE('12/02/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K6', 'MAF', 'KM', 'TGL6', TO_DATE('21/02/2024', 'DD/MM/YYYY'), 280000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K7', 'MAF', 'KM', 'TGL7', TO_DATE('22/02/2024', 'DD/MM/YYYY'), 200000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K8', 'MAF', 'GKJ', 'TGL8', TO_DATE('23/02/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K9', 'MAF', 'KM', 'TGL9', TO_DATE('25/02/2024', 'DD/MM/YYYY'), 50000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K10', 'MAF', 'GKJ', 'TGL10', TO_DATE('01/03/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K11', 'MAF', 'KM', 'TGL10', TO_DATE('01/03/2024', 'DD/MM/YYYY'), 30000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K12', 'MAF', 'KM', 'TGL11', TO_DATE('02/03/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K13', 'MAF', 'KM', 'TGL11', TO_DATE('02/03/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K14', 'MAF', 'GG', 'TGL11', TO_DATE('02/03/2024', 'DD/MM/YYYY'), 1400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K15', 'MAF', 'KM', 'TGL12', TO_DATE('03/03/2024', 'DD/MM/YYYY'), 331500.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K16', 'MAF', 'KM', 'TGL12', TO_DATE('03/03/2024', 'DD/MM/YYYY'), 3002500.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K17', 'MAF', 'KM', 'TGL13', TO_DATE('05/03/2024', 'DD/MM/YYYY'), 641500.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K18', 'MAF', 'KM', 'TGL13', TO_DATE('05/03/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K19', 'MAF', 'KM', 'TGL14', TO_DATE('06/03/2024', 'DD/MM/YYYY'), 232000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K20', 'MAF', 'KM', 'TGL14', TO_DATE('06/03/2024', 'DD/MM/YYYY'), 150000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K21', 'MAF', 'GKJ', 'TGL16', TO_DATE('08/03/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K22', 'MAF', 'KM', 'TGL17', TO_DATE('09/03/2024', 'DD/MM/YYYY'), 312000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K23', 'MAF', 'KM', 'TGL18', TO_DATE('11/03/2024', 'DD/MM/YYYY'), 210000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K24', 'MAF', 'GKJ', 'TGL19', TO_DATE('18/03/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K25', 'MAF', 'LM', 'TGL20', TO_DATE('20/03/2024', 'DD/MM/YYYY'), 2264000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K26', 'MAF', 'GKJ', 'TGL20', TO_DATE('20/03/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K27', 'MAF', 'KM', 'TGL22', TO_DATE('23/03/2024', 'DD/MM/YYYY'), 200000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K28', 'MAF', 'KM', 'TGL23', TO_DATE('25/03/2024', 'DD/MM/YYYY'), 6852500.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K29', 'MAF', 'GG', 'TGL25', TO_DATE('01/04/2024', 'DD/MM/YYYY'), 1400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K30', 'MAF', 'KM', 'TGL26', TO_DATE('03/04/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K31', 'MAF', 'GKJ', 'TGL27', TO_DATE('05/04/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K32', 'MAF', 'MR', 'TGL28', TO_DATE('09/04/2024', 'DD/MM/YYYY'), 2000000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K33', 'MAF', 'MI', 'TGL29', TO_DATE('10/04/2024', 'DD/MM/YYYY'), 2000000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K34', 'MAF', 'GKJ', 'TGL30', TO_DATE('12/04/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K35', 'MAF', 'KM', 'TGL31', TO_DATE('17/04/2024', 'DD/MM/YYYY'), 900000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K36', 'MAF', 'KM', 'TGL31', TO_DATE('17/04/2024', 'DD/MM/YYYY'), 550000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K37', 'MAF', 'KM', 'TGL31', TO_DATE('17/04/2024', 'DD/MM/YYYY'), 300000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K38', 'MAF', 'LM', 'TGL32', TO_DATE('18/04/2024', 'DD/MM/YYYY'), 3422136.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K39', 'MAF', 'GKJ', 'TGL33', TO_DATE('19/04/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K40', 'MAF', 'GKJ', 'TGL35', TO_DATE('25/04/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K41', 'MAF', 'GG', 'TGL36', TO_DATE('02/05/2024', 'DD/MM/YYYY'), 1400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K42', 'MAF', 'GKJ', 'TGL37', TO_DATE('03/05/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K43', 'MAF', 'KM', 'TGL38', TO_DATE('05/05/2024', 'DD/MM/YYYY'), 750000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K44', 'MAF', 'GKJ', 'TGL42', TO_DATE('10/05/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K45', 'MAF', 'KM', 'TGL43', TO_DATE('11/05/2024', 'DD/MM/YYYY'), 40000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K46', 'MAF', 'KM', 'TGL43', TO_DATE('11/05/2024', 'DD/MM/YYYY'), 70000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K47', 'MAF', 'KM', 'TGL44', TO_DATE('13/05/2024', 'DD/MM/YYYY'), 862000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K48', 'MAF', 'GKJ', 'TGL45', TO_DATE('17/05/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K49', 'MDRS', 'GKJ', 'TGL46', TO_DATE('18/05/2024', 'DD/MM/YYYY'), 200000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K50', 'MDRS', 'GKJ', 'TGL47', TO_DATE('19/05/2024', 'DD/MM/YYYY'), 200000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K51', 'MAF', 'LM', 'TGL47', TO_DATE('19/05/2024', 'DD/MM/YYYY'), 3676854.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K52', 'MDRS', 'GKJ', 'TGL48', TO_DATE('20/05/2024', 'DD/MM/YYYY'), 200000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K53', 'MAF', 'KM', 'TGL50', TO_DATE('23/05/2024', 'DD/MM/YYYY'), 200000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K54', 'MAF', 'GKJ', 'TGL51', TO_DATE('24/05/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K55', 'MAF', 'KM', 'TGL52', TO_DATE('25/05/2024', 'DD/MM/YYYY'), 1530000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K56', 'MAF', 'GKJ', 'TGL54', TO_DATE('31/05/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K57', 'MAF', 'GG', 'TGL55', TO_DATE('04/06/2024', 'DD/MM/YYYY'), 1600000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K58', 'MAF', 'GCS', 'TGL55', TO_DATE('04/06/2024', 'DD/MM/YYYY'), 400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K59', 'MAF', 'GKJ', 'TGL58', TO_DATE('09/06/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K60', 'MAF', 'KM', 'TGL59', TO_DATE('11/06/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K61', 'MAF', 'LM', 'TGL61', TO_DATE('20/06/2024', 'DD/MM/YYYY'), 2874540.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K62', 'MAF', 'GKJ', 'TGL62', TO_DATE('23/06/2024', 'DD/MM/YYYY'), 500000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K63', 'MAF', 'KM', 'TGL62', TO_DATE('23/06/2024', 'DD/MM/YYYY'), 3000000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K64', 'MAF', 'KM', 'TGL63', TO_DATE('25/06/2024', 'DD/MM/YYYY'), 200000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K65', 'MAF', 'KM', 'TGL63', TO_DATE('25/06/2024', 'DD/MM/YYYY'), 790000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K66', 'MAF', 'GKJ', 'TGL64', TO_DATE('28/06/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K67', 'MAF', 'GG', 'TGL64', TO_DATE('28/06/2024', 'DD/MM/YYYY'), 1600000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K68', 'MAF', 'GCS', 'TGL64', TO_DATE('28/06/2024', 'DD/MM/YYYY'), 400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K69', 'MAF', 'KM', 'TGL64', TO_DATE('28/06/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K70', 'MAF', 'KM', 'TGL64', TO_DATE('28/06/2024', 'DD/MM/YYYY'), 150000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K71', 'MAF', 'KM', 'TGL65', TO_DATE('04/07/2024', 'DD/MM/YYYY'), 50000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K72', 'MAF', 'GKJ', 'TGL66', TO_DATE('05/07/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K73', 'MAF', 'KM', 'TGL66', TO_DATE('05/07/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K74', 'MAF', 'GG', 'TGL66', TO_DATE('05/07/2024', 'DD/MM/YYYY'), 2000000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K75', 'MAF', 'GKJ', 'TGL66', TO_DATE('05/07/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K76', 'MAF', 'LM', 'TGL66', TO_DATE('05/07/2024', 'DD/MM/YYYY'), 2364150.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K77', 'MAF', 'GKJ', 'TGL68', TO_DATE('16/08/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K78', 'MAF', 'KM', 'TGL69', TO_DATE('18/08/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K79', 'MAF', 'LM', 'TGL70', TO_DATE('19/08/2024', 'DD/MM/YYYY'), 3863856.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K80', 'MAF', 'GKJ', 'TGL73', TO_DATE('23/08/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K81', 'MAF', 'KM', 'TGL73', TO_DATE('23/08/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K82', 'MAF', 'GKJ', 'TGL74', TO_DATE('30/08/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K83', 'MAF', 'GG', 'TGL75', TO_DATE('01/09/2024', 'DD/MM/YYYY'), 1600000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K84', 'MAF', 'GCS', 'TGL75', TO_DATE('01/09/2024', 'DD/MM/YYYY'), 400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K85', 'MAF', 'KM', 'TGL75', TO_DATE('01/09/2024', 'DD/MM/YYYY'), 50000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K86', 'MAF', 'KM', 'TGL76', TO_DATE('03/09/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K87', 'MAF', 'KM', 'TGL76', TO_DATE('03/09/2024', 'DD/MM/YYYY'), 13500000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K88', 'MAF', 'KM', 'TGL76', TO_DATE('03/09/2024', 'DD/MM/YYYY'), 2230000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K89', 'MAF', 'KM', 'TGL77', TO_DATE('04/09/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K90', 'MAF', 'GKJ', 'TGL77', TO_DATE('04/09/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K91', 'MAF', 'KM', 'TGL78', TO_DATE('06/09/2024', 'DD/MM/YYYY'), 700000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K92', 'MAF', 'KM', 'TGL79', TO_DATE('08/09/2024', 'DD/MM/YYYY'), 1600000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K93', 'MAF', 'GKJ', 'TGL79', TO_DATE('08/09/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K94', 'MAF', 'KM', 'TGL80', TO_DATE('09/09/2024', 'DD/MM/YYYY'), 150000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K95', 'MAF', 'GKJ', 'TGL82', TO_DATE('12/09/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K96', 'MAF', 'KM', 'TGL85', TO_DATE('18/09/2024', 'DD/MM/YYYY'), 580000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K97', 'MAF', 'KM', 'TGL87', TO_DATE('20/09/2024', 'DD/MM/YYYY'), 674500.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K98', 'MAF', 'KM', 'TGL87', TO_DATE('20/09/2024', 'DD/MM/YYYY'), 390000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K99', 'MAF', 'LM', 'TGL88', TO_DATE('22/09/2024', 'DD/MM/YYYY'), 1231444.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K100', 'MAF', 'GKJ', 'TGL88', TO_DATE('22/09/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K101', 'MAF', 'GKJ', 'TGL89', TO_DATE('27/09/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K102', 'MAF', 'KM', 'TGL90', TO_DATE('29/09/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K103', 'MAF', 'GKJ', 'TGL91', TO_DATE('04/10/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K104', 'MAF', 'GG', 'TGL92', TO_DATE('05/10/2024', 'DD/MM/YYYY'), 1400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K105', 'MAF', 'GCS', 'TGL92', TO_DATE('05/10/2024', 'DD/MM/YYYY'), 400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K106', 'MAF', 'GGM', 'TGL92', TO_DATE('05/10/2024', 'DD/MM/YYYY'), 400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K107', 'MAF', 'GKJ', 'TGL93', TO_DATE('11/10/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K108', 'MAF', 'KM', 'TGL95', TO_DATE('18/10/2024', 'DD/MM/YYYY'), 265000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K109', 'MAF', 'GKJ', 'TGL95', TO_DATE('18/10/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K110', 'MAF', 'LM', 'TGL96', TO_DATE('19/10/2024', 'DD/MM/YYYY'), 2213280.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K111', 'MAF', 'KM', 'TGL97', TO_DATE('20/10/2024', 'DD/MM/YYYY'), 70000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K112', 'MAF', 'KM', 'TGL98', TO_DATE('25/10/2024', 'DD/MM/YYYY'), 2040000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K113', 'MAF', 'GKJ', 'TGL98', TO_DATE('25/10/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K114', 'MAF', 'KM', 'TGL99', TO_DATE('29/10/2024', 'DD/MM/YYYY'), 50000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K115', 'MAF', 'KM', 'TGL100', TO_DATE('31/10/2024', 'DD/MM/YYYY'), 150000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K116', 'MAF', 'GKJ', 'TGL101', TO_DATE('01/11/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K117', 'MAF', 'GG', 'TGL102', TO_DATE('04/11/2024', 'DD/MM/YYYY'), 1600000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K118', 'MAF', 'GCS', 'TGL102', TO_DATE('04/11/2024', 'DD/MM/YYYY'), 400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K119', 'MAF', 'KM', 'TGL103', TO_DATE('06/11/2024', 'DD/MM/YYYY'), 240000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K120', 'MAF', 'GKJ', 'TGL104', TO_DATE('08/11/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K121', 'MAF', 'GKJ', 'TGL106', TO_DATE('15/11/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K122', 'MAF', 'GKJ', 'TGL106', TO_DATE('15/11/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K123', 'MAF', 'LM', 'TGL107', TO_DATE('20/11/2024', 'DD/MM/YYYY'), 1940436.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K124', 'MAF', 'KM', 'TGL107', TO_DATE('20/11/2024', 'DD/MM/YYYY'), 100000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K125', 'MAF', 'GKJ', 'TGL108', TO_DATE('22/11/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K126', 'MAF', 'KM', 'TGL110', TO_DATE('27/11/2024', 'DD/MM/YYYY'), 1210000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K127', 'MAF', 'KM', 'TGL111', TO_DATE('28/11/2024', 'DD/MM/YYYY'), 5543000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K128', 'MAF', 'GKJ', 'TGL112', TO_DATE('29/11/2024', 'DD/MM/YYYY'), 250000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K129', 'MAF', 'GGM', 'TGL113', TO_DATE('01/12/2024', 'DD/MM/YYYY'), 400000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K130', 'MAF', 'GG', 'TGL113', TO_DATE('01/12/2024', 'DD/MM/YYYY'), 1600000.0);
+
+INSERT INTO peklr_msjd (id_klr, ktgr_klr_data_masjid_id_msjd, ktgr_klr_id_ktgrklr, tanggal_id_tgl, tglklr, jlm )
+VALUES ('K131', 'MAF', 'GCS', 'TGL113', TO_DATE('01/12/2024', 'DD/MM/YYYY'), 400000.0);
+
+------PENYIMPANAN DATA
+COMMIT;
